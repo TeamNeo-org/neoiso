@@ -1,0 +1,10 @@
+NAME="NeoOS GNU/Linux"
+PRETTY_NAME="NeoOS GNU/Linux"
+ID=neoos
+ID_LIKE=arch
+BUILD_ID=rolling
+ANSI_COLOR="38;2;23;147;209"
+HOME_URL="https://github.com/TeamNeo-org/neoiso"
+DOCUMENTATION_URL="https://github.com/TeamNeo-org/neoiso#readme"
+SUPPORT_URL="https://github.com/TeamNeo-org/neoiso/issues"
+BUG_REPORT_URL="https://github.com/TeamNeo-org/neoiso/issues"

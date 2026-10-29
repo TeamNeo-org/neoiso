@@ -3,7 +3,7 @@ mkarchiso
 =========
 
 ------------------------
-Arch Linux ISO generator
+NeoOS ISO generator
 ------------------------
 
 :Version: archiso |version|
@@ -65,12 +65,13 @@ Build the releng profile
 Bugs
 ====
 
-https://gitlab.archlinux.org/archlinux/archiso/-/issues
+https://github.com/TeamNeo-org/neoiso/issues
 
 Authors
 =======
 
-archiso is maintained by the Arch Linux community. Refer to the *AUTHORS* file for a full list of contributors.
+NeoOS is maintained by the NeoOS project. Refer to the *AUTHORS* file for a full list of contributors.
+It is built on archiso, developed by the Arch Linux community.
 
 Copyright
 =========

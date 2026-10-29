@@ -2,7 +2,7 @@
 Transfer ISO to target medium (configs/releng)
 ==============================================
 
-ISO images names consist of: ``archlinux-YYYY.MM.DD-x86_64.iso``.
+ISO images names consist of: ``neoos-YYYY.MM.DD-x86_64.iso``.
 
 Where: ``YYYY`` is the year, ``MM`` the month and ``DD`` the day.
 
@@ -20,7 +20,7 @@ For example:
 
 .. code:: sh
 
-   xorriso -as cdrecord -v -sao dev=/dev/sr0 archlinux-YYYY.MM.DD-x86_64.iso
+   xorriso -as cdrecord -v -sao dev=/dev/sr0 neoos-YYYY.MM.DD-x86_64.iso
 
 Write to an USB flash drive / memory card / hard disk drive / solid state drive / etc.
 ======================================================================================
@@ -35,7 +35,7 @@ Nomeclature:
 ``<DEV-TARGET-N>``
   Device node of the partition on ``<DEV-TARGET>`` (example: ``/dev/sdx1``).
 ``<FS-LABEL>``
-  Represents the file system label of the ``archlinux-YYYY.MM.DD-x86_64.iso`` (example: ``ARCH_201703``).
+  Represents the file system label of the ``neoos-YYYY.MM.DD-x86_64.iso`` (example: ``NEOS_202610``).
 
 ISOHYBRID (BIOS and UEFI)
 -------------------------
@@ -48,7 +48,7 @@ Directly write the ISO file to the target medium:
 
 .. code:: sh
 
-   dd bs=4M if=archlinux-YYYY.MM.DD-x86_64.iso of=<DEV-TARGET> conv=fsync oflag=direct status=progress
+   dd bs=4M if=neoos-YYYY.MM.DD-x86_64.iso of=<DEV-TARGET> conv=fsync oflag=direct status=progress
 
 File system transposition (UEFI only)
 --------------------------------
@@ -93,7 +93,7 @@ If your drive is already partitioned and formatted, skip to the "Mount the targe
 
    .. code:: sh
 
-      bsdtar -x --exclude=boot/syslinux/ -f archlinux-YYYY.MM.DD-x86_64.iso -C /mnt
+      bsdtar -x --exclude=boot/syslinux/ -f neoos-YYYY.MM.DD-x86_64.iso -C /mnt
 
 5. Unmount the target file system.
 
@@ -143,7 +143,7 @@ Manual formatting (BIOS only)
 
    .. code:: sh
 
-      bsdtar -x --exclude=boot/grub/ --exclude=EFI/ -f archlinux-YYYY.MM.DD-x86_64.iso -C /mnt
+      bsdtar -x --exclude=boot/grub/ --exclude=EFI/ -f neoos-YYYY.MM.DD-x86_64.iso -C /mnt
 
 5) Install the syslinux boot loader on the target file system.
 

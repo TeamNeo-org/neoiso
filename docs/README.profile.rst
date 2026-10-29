@@ -25,7 +25,7 @@ This file describes several attributes of the resulting image and is a place for
 of the image.
 
 The image file is constructed from some of the variables in ``profiledef.sh``: ``<iso_name>-<iso_version>-<arch>.iso``
-(e.g. ``archlinux-202010-x86_64.iso``).
+(e.g. ``neoos-20261029-x86_64.iso``).
 
 * ``iso_name``: The first part of the name of the resulting image (defaults to ``mkarchiso``)
 * ``iso_label``: The ISO's volume label (defaults to ``MKARCHISO``)
