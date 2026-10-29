@@ -46,3 +46,11 @@ Testing
 
 Contributors are expected to test their contributions by building the releng profile and running the resulting image
 using `run_archiso <scripts/run_archiso.sh>`_.
+
+LLM usage policy
+================
+
+LLMs and other AI contributions ARE allowed, as long as:
+1. The code is readable and easily changable
+2. You know what it did
+3. You claim responsibility for your contributions.
