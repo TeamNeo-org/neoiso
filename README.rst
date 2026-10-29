@@ -126,3 +126,11 @@ License
 
 GPL-3.0-or-later. See ``LICENSE``. archiso is copyright its contributors; NeoOS additions are copyright the
 NeoOS project.
+
+LLM usage policy
+================
+
+LLMs and other AI contributions ARE allowed, as long as:
+1. The code is readable and easily changable
+2. You know what it did
+3. You claim responsibility for your contributions.
