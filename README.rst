@@ -15,14 +15,19 @@ Repository layout
 ``archiso/mkarchiso``
   The ISO/bootable image builder. Builds ISOs, netboot artifacts and bootstrap tarballs, optionally signing them.
 
-``configs/releng/``
-  The full NeoOS live/install profile (BIOS + UEFI, x86_64 and aarch64).
+``configs/neoos/``
+  The NeoOS base profile: branding, live user, networking and installer tooling (BIOS + UEFI, x86_64 and
+  aarch64). It contains no desktop environment; those plug in from ``configs/neoos/desktops/``.
 
-``configs/baseline/``
-  A minimal profile with no extra packages, useful as a starting point for new NeoOS flavors.
+``configs/releng/`` and ``configs/baseline/``
+  Upstream archiso profiles, kept unmodified so that syncing with upstream stays conflict-free.
+  Use them as references.
 
 ``scripts/run_archiso.sh``
   Runs a built ISO in QEMU for testing.
+
+``scripts/build-iso.sh``
+  Composes the base profile with a desktop module and builds images with ``mkarchiso``.
 
 ``docs/``
   Documentation on writing profiles (``README.profile.rst``) and writing images to bootable media
@@ -54,7 +59,15 @@ neither required nor recommended:
 
 .. code:: sh
 
-   ./archiso/mkarchiso configs/releng
+   ./scripts/build-iso.sh --desktop plasma
+
+The builder copies ``configs/neoos`` to a temporary directory, merges the chosen desktop module into it and
+hands the result to ``mkarchiso``; nothing in the base profile is modified. ``--desktop none`` builds a
+console rescue image from the same base, and ``--list`` shows the available modules. Extra ``mkarchiso``
+options go after ``--``, for example ``-- -v -o /path/to/out``.
+
+The desktop stack dominates the image: with ``plasma``, expect roughly twice the size of the upstream releng
+profile and a noticeably longer ``mksquashfs`` run.
 
 The resulting images are written to ``out/`` (e.g. ``neoos-YYYY.MM.DD-x86_64.iso``). Work and output
 directories as well as signing options are described in the `mkarchiso(1) <man/mkarchiso.1.rst>`_ man page,
@@ -75,6 +88,45 @@ The convenience script **run_archiso** boots an image in QEMU. UEFI is the defau
 
    ./scripts/run_archiso.sh -i out/neoos-YYYY.MM.DD-x86_64.iso
    ./scripts/run_archiso.sh -b -i out/neoos-YYYY.MM.DD-x86_64.iso
+
+Desktop modules
+===============
+
+A desktop environment is a directory under ``configs/neoos/desktops/`` containing:
+
+* ``desktop.conf``: at least ``desktop_name``, used for the ISO application name
+* ``packages.x86_64`` and ``packages.aarch64``: extra packages, merged into the base package lists
+* ``airootfs/``: overlay copied on top of the base airootfs, later files win
+
+``plasma`` is the bundled module. To start your own environment, copy the module, replace its overlay and
+package lists, and build with ``--desktop <name>``; ``configs/neoos/desktops/README.rst`` documents the full
+contract. The base profile stays desktop-agnostic, so swapping a desktop never means editing
+``configs/neoos`` itself.
+
+Modules ship display manager enablement declaratively (symlinks in ``graphical.target.wants`` plus
+``default.target`` -> ``graphical.target``) and their own autologin configuration, so no build-time
+``systemctl enable`` is involved.
+
+Live user
+---------
+
+Every module shares one unprivileged account, created at build time by
+``configs/neoos/airootfs/root/customize_airootfs.sh``: ``liveuser``, empty password, member of ``wheel``, with
+passwordless ``sudo`` via ``airootfs/etc/sudoers.d/10-liveuser``. ``customize_airootfs.sh`` is deprecated by
+archiso but still supported, and account creation has no declarative equivalent in ``profiledef.sh``. The root
+autologin on tty1 is kept as a console fallback.
+
+Networking
+----------
+
+The base profile uses NetworkManager instead of upstream's systemd-networkd + iwd combination, so every
+desktop module has a normal network stack to draw on (``plasma`` ships ``plasma-nm`` for the tray applet).
+``airootfs/etc/systemd/system/multi-user.target.wants/NetworkManager.service`` enables it declaratively;
+``airootfs/etc/NetworkManager/conf.d/10-neoos.conf`` makes NetworkManager hand DNS to systemd-resolved, which
+stays enabled because ``/etc/resolv.conf`` points at its stub resolver.
+
+``--desktop none`` inherits the same stack, so the rescue image can be brought online with ``nmcli`` or
+``nmtui``.
 
 Branding
 ========
