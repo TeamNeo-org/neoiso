@@ -67,6 +67,22 @@ while (( $# )); do
     esac
 done
 
+if (( EUID == 0 )); then
+    echo "warning: running as root; build artifacts will be owned by root." >&2
+    echo "         Prefer running this script as your normal user." >&2
+fi
+
+# mkarchiso defaults to ./work and ./out. Leftovers from a root build cannot be reused by an
+# unprivileged one, and the failure ("Permission denied" on work/base.* or airootfs/dev/fd) is cryptic.
+for dir in "${repo_root}/work" "${repo_root}/out"; do
+    if [[ -e "${dir}" && ! -w "${dir}" ]]; then
+        echo "error: ${dir} exists but is not writable by $(id -un)." >&2
+        echo "       It was probably created by a previous root build. Remove it with:" >&2
+        echo "           sudo rm -rf -- '${dir}'" >&2
+        exit 1
+    fi
+done
+
 desktop_dir="${profile_base}/desktops/${desktop}"
 
 if [[ "${desktop}" != 'none' && ! -f "${desktop_dir}/desktop.conf" ]]; then
